@@ -29,6 +29,8 @@
     Would like to add more info so the user can see what's being imported in each stage and if everything was successful. 
     Would like to add try/catch for areas where failures can occur. 
     Paths could be cleaned up a bit, currently using relitave paths in a lot of locations (e.g. $path\..); It works, but it isn't ideal. 
+    Could link the WMI Filters to each cooresponding GPO
+    Clean up; remove symobolic link/deleted extracted folders
 #>
 
 [Cmdletbinding(SupportsShouldProcess)]
