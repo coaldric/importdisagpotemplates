@@ -5,18 +5,30 @@
 .DESCRIPTION
     Import GPOs, WMI Filters, and Administrative Templates from DISA for STIG compliance. 
 
+.PARAMETER CompressedZip
+    This is the file path of the compressed zip file downloaded from cyber.mil/stigs/gpo.
+
 .PARAMETER STIGPath
-    Parent STIG directory (e.g. C:\STIGS\January); This is the directory that hosts all of the DoD...v1r2 folders (DoD Google Chrome v1r18, DoD Internet Explorer 11 v1r18, etc)
-    Important note! The extracted zip file from DISA causes issues due to the file names being to long. To avoid this, rename or move the folders to keep the paths short. 
-    Instead of using the default extraction (C:\Users\Administrator\Desktop\U_STIG_GPO_Package_January_2020\January 2020 DISA STIG GPO Package 0129)
-    Move and rename 'January 2020 DISA STIG GPO Package 0129' to C:\January. Then you would select C:\January as your STIGPath. 
+    This symbolic link will target the extracted files from the zip.
 
 .NOTES
-    Author: JBear 5/24/2018
-    Re-write: Coaldric 2/4/2020
-        Removed Migration Table and Backup Support. 
-        Simplifying for use of importing from DISA STIG templates in a new environment. 
+    Author: Coaldric 2/4/2020
+    Collaborators: JBear 5/24/2018 - Created the original script Import-STIGgpo (https://github.com/Average-Bear/Import-STIGgpo)
+                   Joe Prox 7/15/2013 - Created the function New-SymLink (https://gallery.technet.microsoft.com/scriptcenter/New-SymLink-60d2531e)
+                   Jake Dean 2/4/2020 - Assisted with troubleshooting
+                   Tim Medina 2/4/2020 - Assisted with troubleshooting
+                   Dan Zinger 2/4/2020 - Assisted with troubleshooting
+    Change Log:    
+    Removed Migration Table and Backup Support. 
     Added function to create symbolic link without calling mklink.exe (function created by Boe Prox)     
+    Added function to select zip file and extract it. Then create a symbolic link to the extracted files which shortens the paths and avoids errors due to paths exceeding maximums.
+    Added function to stage SYSVOL by copying Administrative Templats from the local repo (C:\Windows\PolicyDefinitions) and the Administrative Templates extracted from the zip to the SYSVOL.
+    Added function to import WMI Filters from extracted files. 
+
+    Upcoming Changes
+    Would like to add more info so the user can see what's being imported in each stage and if everything was successful. 
+    Would like to add try/catch for areas where failures can occur. 
+    Paths could be cleaned up a bit, currently using relitave paths in a lot of locations (e.g. $path\..); It works, but it isn't ideal. 
 #>
 
 [Cmdletbinding(SupportsShouldProcess)]
