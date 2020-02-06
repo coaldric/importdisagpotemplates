@@ -7,4 +7,4 @@ This script is intended to be run into a green field environment. If you already
 
 This script will take the zip file downloaded from cyber.mil/stigs/gpo and import the GPOs and WMI Filters into your environment. It will also copy the ADMX/ADML files from the extracted files to your SYSVOL Policy Definitions folder as well as copy the local Policy Definitions folder to SYSVOL (C:\Windows\PolicyDefinitions). 
 
-Simply run the script and select the zip file. 
+Simply copy the script and zip file to your domain controller while logged in with a domain administrator. Then, run the script and select the zip file. 
