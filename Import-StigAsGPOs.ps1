@@ -16,17 +16,17 @@
                    Dan Zinger 2/4/2020 - Assisted with troubleshooting
     Change Log:    
     Removed Migration Table and Backup Support. 
-    Removed function to create symbolic link without calling mklink.exe (function created by Boe Prox)     
-    Added function to select zip file and extract it. 
+    Added function to create symbolic link without calling mklink.exe (function created by Boe Prox)     
+    Added function to select zip file and extract it. Then create a symbolic link to the extracted files which shortens the paths and avoids errors due to paths exceeding maximums.
     Added function to stage SYSVOL by copying Administrative Templats from the local repo (C:\Windows\PolicyDefinitions) and the Administrative Templates extracted from the zip to the SYSVOL.
     Added function to import WMI Filters from extracted files. 
-    Added cleanup to remove C:\Import-STIGAsGPO
     Upcoming Changes
     Would like to add more info so the user can see what's being imported in each stage and if everything was successful. 
     Would like to add try/catch for areas where failures can occur. 
     Paths could be cleaned up a bit, currently using relitave paths in a lot of locations (e.g. $path\..); It works, but it isn't ideal. 
     Could link the WMI Filters to each cooresponding GPO
-    
+    Clean up; remove symobolic link/deleted extracted folders 
+    Fixed PolicyDefinitions location
 #>
 
 [Cmdletbinding(SupportsShouldProcess)]
@@ -87,7 +87,7 @@ function Import-STIGasGPO {
     
     # Import Policy Definitions
     $defaultDefPath = "C:\Windows\PolicyDefinitions\"
-    $domainDefPath = "C:\Windows\SYSVOL\sysvol\$domain\PolicyDefinitions"
+    $domainDefPath = "C:\Windows\SYSVOL\sysvol\$domain\policies\PolicyDefinitions"
 
     if ((test-path $domainDefPath) -eq $false ) {
         Write-Host -ForegroundColor Green "`tCopying Policy Definitions"
