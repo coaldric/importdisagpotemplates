@@ -27,6 +27,8 @@
     Could link the WMI Filters to each cooresponding GPO
     Clean up; remove symobolic link/deleted extracted folders 
     Fixed PolicyDefinitions location
+    Added check for PowerShell 5.1
+    Fixed $STIGPath 
 #>
 
 [Cmdletbinding(SupportsShouldProcess)]
@@ -35,7 +37,7 @@ param(
     [String[]]$compressedzip = $null,
 
     [Parameter(ValueFromPipeline = $true, HelpMessage = "Enter STIG Directory")]
-    [String[]]$STIGPath = "C:\ExtractedSTIGs",
+    [String[]]$STIGPath = "C:\Import-STIGasGPO",
 
     [Parameter(ValueFromPipeline = $true, HelpMessage = "Enter Desired Domain")]
     [String[]]$Domain = (Get-ADDomainController).Domain
@@ -43,6 +45,17 @@ param(
 )
 #transcript for logging purpases
 Start-Transcript C:\Import-STIG-Log.txt -Verbose
+If ($PSVersionTable.PSVersion.major -ge 5 ) {
+    
+    Write-Host -ForegroundColor Green "The current PowerShell version is supported."
+    }
+
+    Else {
+        
+        Write-Host -ForegroundColor Yellow "Import-STIGasGPO only supports PowerShell version 5 or higher. Please install WMF 5.1 or higher before continuing. Exiting." 
+        Break
+        
+        }
 
 #prompts user to select the compressed ZIP Path
 if ($compressedzip -eq $null) {
@@ -60,8 +73,8 @@ if ($compressedzip -eq $null) {
 
         Try {
             
-            Expand-Archive -LiteralPath $dialog.FileName -DestinationPath "C:\Import-STIGasGPO" -force
-            $STIGPath = "C:\Import-STIGasGPO"
+            Expand-Archive -LiteralPath $dialog.FileName -DestinationPath "$STIGPath" -force
+            #$STIGPath = "C:\Import-STIGasGPO"
         }
         Catch {
 
